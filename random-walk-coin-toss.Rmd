@@ -140,12 +140,14 @@ Intuitively have a sense that the trajectory will erraticaly jump above and belo
 We run the experiment:
 
 ```{r q2-1c}
-# Create a vector of length num.flips containing the cumulative sum of the flips, 
-#   incrementing by 1 for each outcome of Tails, and -1 for each outcome of Tails
+# Create our random walk, a vector of length num.flips containing the cumulative sum of the flips, 
+#   incrementing by 1 for each outcome of Tails, and -1 for each outcome of Tails.
+#   This is a one-dimensional random walk, moving +1 or -1 with equal probability.
 trajectory.wealth <- cumsum(flips.wealth)
 
 # Create a line graph of our wealth trajectory. In this case rather than plotting the frequency 
-#   of Tails we are plotting the "luck" of our gambler via their current wealth in the bet.
+#   of Tails we are plotting the position, in terms of wealth, of our gambler, as she
+#   'walks along randomly' in either the +1 or -1 direction.
 plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l")
 lines(c(0, num.flips), c(0, 0))
 ```
@@ -154,12 +156,80 @@ And our expectations are wildly inaccurate!
 
 While we did consider the probability the coin would land on 4-5 consecutive heads or tails, and that probability is small, what we did not consider is the probability that the experiment would take a general upward (or downward) trend over time, despite these constant fluctuations.
 
-Taking a closer look at the data, we can see that ??? XXX ???
+Running the experiment with alternate seeds:
+
+```{r q2-1c-repeat}
+set.seed(54321)
+flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
+trajectory.wealth <- cumsum(flips.wealth)
+plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l")
+lines(c(0, num.flips), c(0, 0))
+
+set.seed(33333)
+flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
+trajectory.wealth <- cumsum(flips.wealth)
+plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l")
+lines(c(0, num.flips), c(0, 0))
+```
+
+Taking a closer look at the data, we can see that 
+
+??? XXX ???
 
 # 2.2 Multiple Trajectories
 
-Our next experiment we look at the probability of our trajectory ending a certain distance from zero.
+In our next experiment we look at the probability of our trajectory ending a certain distance from zero.
 
-### a. What do you expect the probabilities of the following events to be?
+### a. **What do you expect the probabilities of the following events to be?**
+
+***If $N_{h}$ is the number of "Heads" and $N_{t}$ is the number of "Tails" in 500 coin flips, then what is:***
+
+$P(|N_{h} - N_{t}| < 5)$?
+
+??? XXX ???
+
+$P(|N_{h} - N_{t}| > 25)$?
+
+??? XXX ???
+
+### b. **Estimate the Probabilities**
+
+Convert the flips.wealth sample of 1,000,000 coin flips into a matrix of 2000 random walk samples, each 500 long:
+
+```{r q2-2}
+# Recontruct sample with original seed
+set.seed(12345)
+flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
+
+# Convert the sample into a matrix with 500 columns
+matrix.wealth <- matrix(flips.wealth, ncol = 500)
+# Then apply cumsum over each row and transform, turning our sample into 2000 random walks
+trajectories.matrix <- t(apply(matrix.wealth, MARGIN = 1, cumsum))
+
+# Observe the dimensions of our matrix
+dim(trajectories.matrix)
+
+# What proportion of the 
+
+```
 
 
+**How many times out of 2,000 runs:**
+
+***Do trajectories end less than 5 points away from zero (5 is 1% of 500 tosses)?***
+
+??? XXX ???
+
+***Do trajectories end more than 25 points away from zero (25 is 5% of 500 tosses)?***
+
+??? XXX ???
+
+# Time On One Side
+
+### a. **How long do you expect trajectory of random walk to spend on one side from zero, below or above?**
+
+??? XXX ???
+
+### b. **Interpret the results. Was your intuition correct?**
+
+Use the 
