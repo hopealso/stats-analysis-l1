@@ -67,7 +67,7 @@ Then the trajectory demonstrates a slightly larger tendency toward Heads, later 
 (min(freq.tails[20:1000]))
 ```
 
-All of which simply demonstrates that our random experiment is unpredictable in the short term. However, as the trajectory becomes longer and longer (n becomes larger and larger), we can see the frequency of flips with the outcome Tails moving closer and closer to 0.5, the theoretical probability of getting Tails.
+All of which simply demonstrates that our random experiment is unpredictable in the short term. While it may be surprising that the trajectory has such an extended tendency toward tails (lying above 0.5 for most of our experiment), as the trajectory becomes longer and longer (n becomes larger and larger), we can see the frequency of flips with the outcome Tails moving closer and closer to 0.5, the theoretical probability of getting Tails.
 
 Let's take a closer look at the final 5000 entries:
 
@@ -85,7 +85,7 @@ plot(50000:100000, freq.tails[50000:100000], ylim = c(0.52, 0.48), type = "l",
 lines(c(50000, 100000), c(0.5, 0.5))
 ```
 
-When we change the scale, we can see that our experiment still varies. But at the original scale the frequency is nearly indistinguishable from a straight line at the 0.5 frequency mark. At the 100,000th flip, the tail frequency is `r tail(freq.tails, 1)`.
+When we change the scale, we can see that our experiment still varies and is varying both above and below the 0.5 line. But at the original scale the frequency is nearly indistinguishable from a straight line at the 0.5 frequency mark. At the 100,000th flip, the tail frequency is `r tail(freq.tails, 1)`.
 
 # 2. Check Your Intuition About Random Walks
 
@@ -125,4 +125,41 @@ flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
 
 ***How much do you expect the trajectory of wealth to deviate from zero?***
 
+Intuitively we can expect the trajectory of wealth to deviate from zero as much as $2-$3, as we imagine that the coin could perhaps immediately land on Tails 2-3 times.
+
+What is the probability that this intuitive guess is underestimating, and that instead the coin will land on Tails 4 or 5 times in a row in its initial flips?
+
+??? XXX ???
+
 ***How long do you expect it to stay on one side above or below zero?***
+
+Intuitively have a sense that the trajectory will erraticaly jump above and below zero. Since remaining above or below the line would represent consecutive flips of Heads or Tails, we estimate that, similar to our above guess, that the wealth of our hypothetical gambler would not often remain consecutively negative or positive longer than 3-4 flips.
+
+### c. **How do the observations match our prior expectations?**
+
+We run the experiment:
+
+```{r q2-1c}
+# Create a vector of length num.flips containing the cumulative sum of the flips, 
+#   incrementing by 1 for each outcome of Tails, and -1 for each outcome of Tails
+trajectory.wealth <- cumsum(flips.wealth)
+
+# Create a line graph of our wealth trajectory. In this case rather than plotting the frequency 
+#   of Tails we are plotting the "luck" of our gambler via their current wealth in the bet.
+plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l")
+lines(c(0, num.flips), c(0, 0))
+```
+
+And our expectations are wildly inaccurate! 
+
+While we did consider the probability the coin would land on 4-5 consecutive heads or tails, and that probability is small, what we did not consider is the probability that the experiment would take a general upward (or downward) trend over time, despite these constant fluctuations.
+
+Taking a closer look at the data, we can see that ??? XXX ???
+
+# 2.2 Multiple Trajectories
+
+Our next experiment we look at the probability of our trajectory ending a certain distance from zero.
+
+### a. What do you expect the probabilities of the following events to be?
+
+
