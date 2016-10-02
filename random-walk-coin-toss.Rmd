@@ -24,7 +24,7 @@ flips <- sample(0:1, num.flips, replace = T)
 #   incrementing by 1 for each outcome of Tails
 trajectory <- cumsum(flips)
 
-# Create a vector of length num.flips containing the running frequency of of tails,
+# Create a vector of length num.flips containing the running frequency of tails,
 #   with each entry representing the calculated frequency after the nth flip
 freq.tails <- trajectory / (1:num.flips)
 
@@ -63,7 +63,29 @@ At the 100,000th flip, the tail frequency is `r tail(freq.tails, 1)`.
 # Create a line graph honing in on the next 50000 entries in the tails frequency vector
 plot(4000:54000, freq.tails[4000:54000], ylim = c(0.4, 0.6), type = "l", 
      ylab = "Frequency of Tails Outcome", xlab = "Sample Length", 
-     main = "Tails Frequency Trajectory to 4000")
+     main = "Tails Frequency Next 50,000")
 lines(c(4000,54000), c(0.5, 0.5))
+```
+
+## 2. Check Your Intuition About Random Walks
+
+# 2.1
+
+```{r q2-1}
+# Seed for reproducibility
+set.seed(12345)
+
+# Increase the number of flips
+num.flips <- 1000000
+
+# Create a random sample of num.flips coin flips to simulate a gambling game, where
+#   $1 0 = Heads and 1 = Tails
+flips.wealth <- (sample(0:1, num.flips, replace = T) - 0.5) * 2
+(table(flips.wealth))
+
+# Alternate method of producing above sample
+set.seed(12345)
+flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
+(table(flips.wealth))
 ```
 
