@@ -208,19 +208,41 @@ In our next experiment we look at the probability of our trajectory ending a cer
 
 ### a. **What do you expect the probabilities of the following events to be?**
 
-***If $N_{h}$ is the number of "Heads" and $N_{t}$ is the number of "Tails" in 500 coin flips, then what is:***
+***$N_{h}$ is the number of "Heads" and $N_{t}$ is the number of "Tails" in 500 coin flips.***
 
-$P(|N_{h} - N_{t}| < 5)$?
+Let's look at this distribution, X ~ Binom(500, 0.5):
 
-??? XXX ???
+```{r 2-2-chart}
+plot(dbinom(0:500, size = 500, prob = 0.5), type = "l")
+```
 
-$P(|N_{h} - N_{t}| > 25)$?
+***Estimate $P(|N_{h} - N_{t}| < 5)$:***
 
-??? XXX ???
+This is the probability that the absolute value of the number of successes minus the number of failures will be less than 5, or, in other words, the successes minus failures are within 5 of zero.
+
+Doing a little algebra, we can express this in terms of the number of successes, if x is our successes and x' is our failures:
+
+$P(|x - x'| < 5)$
+
+$P(|x - (500 - x)| < 5)$
+
+$P(|2x - 500| < 5)$
+
+$P(247.5 > x < 252.5)$
+
+This makes sense, our event is those outcomes in which the number of successes is within 2.5 of the  center of our distribution.
+
+Without doing the math, we'll guess that this will be about a 10% probability. 
+
+***Estimate $P(|N_{h} - N_{t}| > 25)$:***
+
+In this example, we're looking for a number of successes that is within 12.5 of our center.
+
+Let's guess that this is a 25% probability.
 
 ### b. **Estimate the Probabilities**
 
-Convert the flips.wealth sample of 1,000,000 coin flips into a matrix of 2000 random walk samples, each 500 long:
+To run an experiment that will empirically estimate these probabilities, we'll convert the flips.wealth sample of 1,000,000 coin flips into a matrix of 2000 random walk samples, each 500 long:
 
 ```{r q2-2}
 # Recontruct sample with original seed
