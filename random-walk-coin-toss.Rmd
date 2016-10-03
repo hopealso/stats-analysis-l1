@@ -5,6 +5,10 @@ date: "September 29, 2016"
 output: pdf_document
 ---
 
+```{r settings}
+options(scipen = 5)
+```
+
 Explore the probabilities associated with the experiment of tossing a simulated fair coin multiple times.
 
 # 1. Convergence of Probability of Tail to 0.5
@@ -129,7 +133,14 @@ Intuitively we can expect the trajectory of wealth to deviate from zero as much 
 
 What is the probability that this intuitive guess is underestimating, and that instead the coin will land on Tails 4 or 5 times in a row in its initial flips?
 
-??? XXX ???
+```{r q2-1b}
+# This can be calculated easily as the probability of 4-5 successes in the
+#   distribution X ~ Binom(5, 0.5)
+
+(dbinom(0:5, size = 5, prob = 0.5))
+```
+
+So, in 5 tosses there is a ~15% proability that we would get 4 tails in a row, and a 3% probability that we would get 5 tails a row. It seems like our prediction is likely under; let's find out how much.
 
 ***How long do you expect it to stay on one side above or below zero?***
 
@@ -148,33 +159,48 @@ trajectory.wealth <- cumsum(flips.wealth)
 # Create a line graph of our wealth trajectory. In this case rather than plotting the frequency 
 #   of Tails we are plotting the position, in terms of wealth, of our gambler, as she
 #   'walks along randomly' in either the +1 or -1 direction.
-plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l")
+plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l",
+     main = "Random Walk +1 / -1")
 lines(c(0, num.flips), c(0, 0))
 ```
 
 And our expectations are wildly inaccurate! 
 
-While we did consider the probability the coin would land on 4-5 consecutive heads or tails, and that probability is small, what we did not consider is the probability that the experiment would take a general upward (or downward) trend over time, despite these constant fluctuations.
+While we did consider the probability the coin would land on 4-5 consecutive heads or tails, and that probability is small, what we did not consider is the compound effect of repeated tendencies toward heads or tails. It's not just 3/5 that causes a trend away from zero, but 3/5 (or 4/5 or 5/5) multiple times compounded.
+
+Our sample demonstrates a general upward trend from ~50k to 600k trials, despite constant fluctuations up and down within that trend.
 
 Running the experiment with alternate seeds:
 
 ```{r q2-1c-repeat}
-set.seed(54321)
-flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
-trajectory.wealth <- cumsum(flips.wealth)
-plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l")
-lines(c(0, num.flips), c(0, 0))
-
 set.seed(33333)
 flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
 trajectory.wealth <- cumsum(flips.wealth)
-plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l")
+plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l",
+     main = "Random Walk +1 / -1")
 lines(c(0, num.flips), c(0, 0))
+
+set.seed(54321)
+flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
+trajectory.wealth <- cumsum(flips.wealth)
+plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l",
+     main = "Random Walk +1 / -1")
+lines(c(0, num.flips), c(0, 0))
+
+# Zooming In
+plot(250000:300000, trajectory.wealth[250000:300000], ylim = c(250, 750), type = "l",
+     main = "Random Walk Zoom to 50,000 Trials")
+lines(c(250000, 300000), c(0, 0))
+
+# Zooming In
+plot(250000:250500, trajectory.wealth[250000:250500], ylim = c(320, 350), type = "l",
+     main = "Random Walk Zoom to 500 Trials")
+lines(c(250000, 250500), c(0, 0))
 ```
 
-Taking a closer look at the data, we can see that 
+So, while our intuition correctly perceived that there would be fluctuations within a set of 5-10 trials, what we didn't foresee was that these fluctuations compound on themselves and occur at larger and larger scales, as shown by our sample in which the distance from zero extends beyond our original y-axis limit.
 
-??? XXX ???
+The zoomed charts demonstrate that our fluctuations appear remarkable similar as we zoom in, on scales of 1 million, 300k and only 500 trials.
 
 # 2.2 Multiple Trajectories
 
@@ -233,3 +259,17 @@ dim(trajectories.matrix)
 ### b. **Interpret the results. Was your intuition correct?**
 
 Use the 
+
+# Test: Relationship Between Slope and Correlation
+
+```{r Test}
+# Read sample data. Store sample.csv in working directory of project.
+sample <- read.table('sample.csv', header = T)
+
+(sd.X <- sd(sample$x))
+(sd.Y <- sd(sample$y))
+(cor.XY <- cor(sample$x, sample$y))
+(cov.XY <- cov(sample$x, sample$y))
+(a <- cov.XY / (sd.X)^2)
+```
+
