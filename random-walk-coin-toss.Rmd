@@ -151,14 +151,14 @@ Intuitively have a sense that the trajectory will erraticaly jump above and belo
 We run the experiment:
 
 ```{r q2-1c}
-# Create our random walk, a vector of length num.flips containing the cumulative sum of the flips, 
-#   incrementing by 1 for each outcome of Tails, and -1 for each outcome of Tails.
+# Create our random walk, a vector of length num.flips containing the cumulative sum of 
+#   the flips, incrementing by 1 for each outcome of Tails, and -1 for each outcome of Tails.
 #   This is a one-dimensional random walk, moving +1 or -1 with equal probability.
 trajectory.wealth <- cumsum(flips.wealth)
 
-# Create a line graph of our wealth trajectory. In this case rather than plotting the frequency 
-#   of Tails we are plotting the position, in terms of wealth, of our gambler, as she
-#   'walks along randomly' in either the +1 or -1 direction.
+# Create a line graph of our wealth trajectory. In this case rather than plotting the 
+#   frequency of Tails we are plotting the position, in terms of wealth, of our gambler, 
+#   as she 'walks along randomly' in either the +1 or -1 direction.
 plot(trajectory.wealth, ylim = c(-1000, 1000), type = "l",
      main = "Random Walk +1 / -1")
 lines(c(0, num.flips), c(0, 0))
@@ -210,10 +210,10 @@ In our next experiment we look at the probability of our trajectory ending a cer
 
 ***$N_{h}$ is the number of "Heads" and $N_{t}$ is the number of "Tails" in 500 coin flips.***
 
-Let's look at this distribution, X ~ Binom(500, 0.5):
+Let's look at the distribution of the number of "successes" in 500 coin flips, X ~ Binom(500, 0.5):
 
-```{r 2-2-chart}
-plot(dbinom(0:500, size = 500, prob = 0.5), type = "l")
+```{r 2-2a-chart}
+plot(dbinom(0:500, size = 500, prob = 0.5), type = "l", main = "X ~ Binom(500, 0.5)")
 ```
 
 ***Estimate $P(|N_{h} - N_{t}| < 5)$:***
@@ -244,43 +244,82 @@ Let's guess that this is a 25% probability.
 
 To run an experiment that will empirically estimate these probabilities, we'll convert the flips.wealth sample of 1,000,000 coin flips into a matrix of 2000 random walk samples, each 500 long:
 
-```{r q2-2}
+```{r q2-2b}
 # Recontruct sample with original seed
 set.seed(12345)
 flips.wealth <- sample(c(-1, 1), size = num.flips, replace = T)
 
-# Convert the sample into a matrix with 500 columns
+# Convert the sample into a matrix with 500 columns and 2000 rows
 matrix.wealth <- matrix(flips.wealth, ncol = 500)
-# Then apply cumsum over each row and transform, turning our sample into 2000 random walks
+# Then apply cumsum over each row and transform, so that each row is a random walk
 trajectories.matrix <- t(apply(matrix.wealth, MARGIN = 1, cumsum))
 
 # Observe the dimensions of our matrix
 dim(trajectories.matrix)
 
-# What proportion of the 
+# Using our final column (cumsum), calculate the proportion of our 2000 walks that ended
+#   less than 5 away from the zero starting point
+size.sample <- 2000 # Each random walk is a sample in our experiment
+size.event.under.5 <- sum(abs(trajectories.matrix[,500]) < 5) # Count each valid result 
+(p.under.5 <- size.event / size.sample)
 
+# Calculate this proportion for those walks that ended less than 25 away
+size.event.under.25 <- sum(abs(trajectories.matrix[,500]) < 25) # Count each valid result 
+(p.under.25 <- size.event / size.sample)
 ```
 
+While mathematically equivalent, our random walk matrix approaches the original problem of number of heads minus number of tails from a different angle than the probability distribution we charted above.
 
-**How many times out of 2,000 runs:**
+On our chart of the distribution each iterative success represents x+1. Each failure does not impact x.
+* Our distribution is from 0 to 500.
+* Our expected value is in the centerl of this distribution. 
+* 250 represents exactly the same number of heads and tails, 251 represents one more head than tails, and 249 one less.
+
+On the other hand, our random walk represents each success as +1 and each failure as -1. 
+* Our possible values range from -250 to 250.
+* Our expected value is 0. 
+* 0 represents exactly the same number of heads and tails, 1 represents one more head than tails, and -1 one less.
+
+In our trajectory matrix, rather than each entry representing a flip which would need to be totaled to give us our random variable, each entry represents the current running value of our random variable as it progresses through the trials.
+
+Therefore the final column of the matrix is the final result of our experiment. By summing this column and dividing by our number of random walks, 2000, we arrive at an estimate of the distance away from our expected value each of the 2000 experiments achieves.
+
+Let's chart now a histogram of our 2000 experiments:
+
+```{r q2-2b-chart}
+hist(trajectories.matrix[,500], main = "Experimental Distrib. of 500-Trial Random Walks")
+```
+
+### c. **How many times out of 2,000 runs:**
 
 ***Do trajectories end less than 5 points away from zero (5 is 1% of 500 tosses)?***
 
-??? XXX ???
+`r size.event.under.5` or `r p.under.5` of our trajectories ended less than 5 points away from zero.
 
 ***Do trajectories end more than 25 points away from zero (25 is 5% of 500 tosses)?***
 
+`r size.event.under.25` or `r p.under.25` of our trajectories ended less than 25 points away from zero.
+
+### d. **Interpret the results. How did they correspond to your intuition?**
+
+Our estimate of the number of trajectories under 5 was roughly accurate, but our estimate of the number under 25 was greatly under.
+
 ??? XXX ???
 
-# Time On One Side
+# 2.3 Time On One Side
 
 ### a. **How long do you expect trajectory of random walk to spend on one side from zero, below or above?**
 
-??? XXX ???
+Given heads and tails are equally likelym we would naturally expect the random walk to spend half of its time on one side and the other half on the opposite side. We have seen that for any individual walk this can widely vary, however for 2000 trajectories I expect our result to be 0.5 plus or minus 10%.
 
 ### b. **Interpret the results. Was your intuition correct?**
 
-Use the 
+We'll choose time above zero and calculate that proportion for our sample of 2000 random walks.
+
+```{r q2-3}
+
+```
+
 
 # Test: Relationship Between Slope and Correlation
 
