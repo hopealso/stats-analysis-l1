@@ -5,7 +5,7 @@ date: "September 29, 2016"
 output: pdf_document
 ---
 
-```{r settings}
+```{r settings, echo=FALSE}
 options(scipen = 5)
 ```
 
@@ -15,7 +15,7 @@ Explore the probabilities associated with the experiment of tossing a simulated 
 
 ### a. **We will check that the frequency of "Tails" (outcome equals 1) converges to 0.5 as the number of tosses grows. What does this say about the fairness of the coin?**
 
-Through the axioms of probability and the Equally Likely Rule, we know that the probability of two equally likely mutually exclusive (disjoint) are equivalent and add to 1, therefore each have a probability of 0.5. 
+Through the axioms of probability and the Equally Likely Rule, we know that the probability of two equally likely mutually exclusive (disjoint) events are equivalent and add to 1, therefore each have a probability of 0.5. 
 
 This experiment demonstrates this phenomenon, with our computer-generated pseudo-random simulation of a fair coin. In this case the two equally-likely events are a result of Heads and a result of Tails, each of whose probability is 0.5.
 
@@ -28,7 +28,6 @@ The definition of a fair coin is one one in which both outcomes, Heads and Tails
 set.seed(12345)
 
 num.flips <- 100000
-#num.flips <- 200000
 
 # Create a random sample of num.flips coin flips, represented by 0 = Heads and 1 = Tails
 # Store this sample in the vector flips
@@ -61,7 +60,6 @@ What we see in the graphs is a behavior in which the trajectory of frequencies j
 
 ```{r q1b-early}
 (head(freq.tails, 20))
-(max(freq.tails[0:6]))
 ```
 
 Then the trajectory demonstrates a slightly larger tendency toward Heads, later again a more pronounced tendency toward Tails.
@@ -261,11 +259,11 @@ dim(trajectories.matrix)
 #   less than 5 away from the zero starting point
 size.sample <- 2000 # Each random walk is a sample in our experiment
 size.event.under.5 <- sum(abs(trajectories.matrix[,500]) < 5) # Count each valid result 
-(p.under.5 <- size.event / size.sample)
+(p.under.5 <- size.event.under.5 / size.sample)
 
 # Calculate this proportion for those walks that ended less than 25 away
 size.event.under.25 <- sum(abs(trajectories.matrix[,500]) < 25) # Count each valid result 
-(p.under.25 <- size.event / size.sample)
+(p.under.25 <- size.event.under.25 / size.sample)
 ```
 
 While mathematically equivalent, our random walk matrix approaches the original problem of number of heads minus number of tails from a different angle than the probability distribution we charted above.
@@ -310,16 +308,42 @@ Our estimate of the number of trajectories under 5 was roughly accurate, but our
 
 ### a. **How long do you expect trajectory of random walk to spend on one side from zero, below or above?**
 
-Given heads and tails are equally likelym we would naturally expect the random walk to spend half of its time on one side and the other half on the opposite side. We have seen that for any individual walk this can widely vary, however for 2000 trajectories I expect our result to be 0.5 plus or minus 10%.
+Given heads and tails are equally likely we would naturally expect the random walk to spend half of its time on one side and the other half on the opposite side. We have seen that for any individual walk this can widely vary, however for 2000 trajectories we expect our result to be 0.5 plus or minus 10%.
 
 ### b. **Interpret the results. Was your intuition correct?**
 
 We'll choose time above zero and calculate that proportion for our sample of 2000 random walks.
 
 ```{r q2-3}
+# For each random walk trajectory, count the number of steps that ended above 0
+count.above.0 <- apply(trajectories.matrix, MARGIN = 1, 
+                       function(z) sum(z > 0)) 
 
+# Chart the distribution
+hist(count.above.0, main = "500-Trial Random Walk: Number of Steps Ending Above 0")
 ```
 
+Our estimate is correct in a way--the average number of steps above 0 in our sample of 2000 is approximately 250.
+
+```{r q2-3-prob}
+(mean.above.0 <- mean(count.above.0))
+```
+
+However, surprisingly this central number does not represent the majority of observations, and far more common is those walks spending dramatically more or less of their time on one side of zero.
+
+### c. **Explain the observed distribution.**
+
+This is a U-shaped bi-modal distribution whose greatest frequencies are at the two extremes of the variable rather than in the center.
+
+This distribution, while surprising, clarifies the equally surprising results from the first experiment. Our random walk has a far greater tendency to extend itself further and further away from zero, in either direction, than remain near zero or fluctuate above and below zero.
+
+### d. **Search for the name of the law that we are observing on the last histogram.**
+
+This behavior is known as the arcsine law of random walk theory, which is a special case of the beta distribution, as described:
+
+* https://en.wikipedia.org/wiki/Arcsine_laws_(Wiener_process)
+* https://en.wikipedia.org/wiki/Arcsine_distribution
+* https://en.wikipedia.org/wiki/Beta_distribution
 
 # Test: Relationship Between Slope and Correlation
 
