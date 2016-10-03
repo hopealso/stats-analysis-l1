@@ -164,7 +164,7 @@ lines(c(0, num.flips), c(0, 0))
 
 And our expectations are wildly inaccurate! 
 
-While we did consider the probability the coin would land on 4-5 consecutive heads or tails, and that probability is small, what we did not consider is the compound effect of repeated tendencies toward heads or tails. It's not just 3/5 that causes a trend away from zero, but 3/5 (or 4/5 or 5/5) multiple times compounded.
+While we did consider the probability the coin would land on 4-5 consecutive heads or tails, and that probability is small, what we did not consider is the compound effect of repeated tendencies toward heads or tails. It appears it's not just our 3/5 intuition that causes a trend away from zero, but 3/5 (or 4/5 or 5/5) multiple times compounded.
 
 Our sample demonstrates a general upward trend from ~50k to 600k trials, despite constant fluctuations up and down within that trend.
 
@@ -196,7 +196,7 @@ plot(250000:250500, trajectory.wealth[250000:250500], ylim = c(320, 350), type =
 lines(c(250000, 250500), c(0, 0))
 ```
 
-So, while our intuition correctly perceived that there would be fluctuations within a set of 5-10 trials, what we didn't foresee was that these fluctuations compound on themselves and occur at larger and larger scales, as shown by our sample in which the distance from zero extends beyond our original y-axis limit.
+So, while our intuition correctly perceived that there would be fluctuations up and down within smaller sets of trials, what we didn't foresee was that these fluctuations compound on themselves and occur at larger and larger scales, as shown by our sample in which the distance from zero extends beyond our original y-axis limit.
 
 The zoomed charts demonstrate that our fluctuations appear remarkable similar as we zoom in, on scales of 1 million, 300k and only 500 trials.
 
@@ -269,13 +269,19 @@ size.event.under.25 <- sum(abs(trajectories.matrix[,500]) < 25) # Count each val
 While mathematically equivalent, our random walk matrix approaches the original problem of number of heads minus number of tails from a different angle than the probability distribution we charted above.
 
 On our chart of the distribution each iterative success represents x+1. Each failure does not impact x.
+
 * Our distribution is from 0 to 500.
-* Our expected value is in the centerl of this distribution. 
+
+* Our expected value is in the center of this distribution, 250. 
+
 * 250 represents exactly the same number of heads and tails, 251 represents one more head than tails, and 249 one less.
 
 On the other hand, our random walk represents each success as +1 and each failure as -1. 
-* Our possible values range from -250 to 250.
+
+* Our possible final values (end of walk) range from -250 to 250.
+
 * Our expected value is 0. 
+
 * 0 represents exactly the same number of heads and tails, 1 represents one more head than tails, and -1 one less.
 
 In our trajectory matrix, rather than each entry representing a flip which would need to be totaled to give us our random variable, each entry represents the current running value of our random variable as it progresses through the trials.
@@ -300,15 +306,15 @@ hist(trajectories.matrix[,500], main = "Experimental Distrib. of 500-Trial Rando
 
 ### d. **Interpret the results. How did they correspond to your intuition?**
 
-Our estimate of the number of trajectories under 5 was roughly accurate, but our estimate of the number under 25 was greatly under.
+Our estimate of the number of trajectories within 5 of 0 was roughly accurate, but our estimate of the number within 25 was greatly under.
 
-??? XXX ???
+Knowing this is a binomial distribution, we could have observed that while a normal distribution is continuous rather than discrete, the shapes and probability densities are similar. This might have given us a better intuitive guess at the second number, especially as we get more accustomed to these distributions.
 
 # 2.3 Time On One Side
 
-### a. **How long do you expect trajectory of random walk to spend on one side from zero, below or above?**
+### a. **How long do you expect the trajectory of a random walk to spend on one side of zero (below or above)?**
 
-Given heads and tails are equally likely we would naturally expect the random walk to spend half of its time on one side and the other half on the opposite side. We have seen that for any individual walk this can widely vary, however for 2000 trajectories we expect our result to be 0.5 plus or minus 10%.
+Given heads and tails are equally likely we would naturally expect the random walk to spend half of its time on one side and the other half on the opposite side. We have seen that for any individual walk this can widely vary, however for 2000 trajectories we expect our average walk to be 0.5 plus or minus 10%.
 
 ### b. **Interpret the results. Was your intuition correct?**
 
@@ -335,7 +341,7 @@ However, surprisingly this central number does not represent the majority of obs
 
 This is a U-shaped bi-modal distribution whose greatest frequencies are at the two extremes of the variable rather than in the center.
 
-This distribution, while surprising, clarifies the equally surprising results from the first experiment. Our random walk has a far greater tendency to extend itself further and further away from zero, in either direction, than remain near zero or fluctuate above and below zero.
+This distribution, while surprising, clarifies the equally surprising results from the first experiment. Our random walk has a far greater tendency to extend itself further and further away from zero, in either direction, than a tendency to remain near zero or fluctuate above and below zero as we originally supposed.
 
 ### d. **Search for the name of the law that we are observing on the last histogram.**
 
